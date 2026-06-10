@@ -11,8 +11,8 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 async function summarise(headline, url) {
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 400,
-    tools: [{ type: 'web_fetch_20250910', name: 'web_fetch', max_uses: 2 }],
+    max_tokens: 1024,
+    tools: [{ type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 2 }],
     system: "You're briefing radio on-air talent. Read the article and return a tight summary: the who/what/when/where/why, then one line on the talk angle — is this news value or comedic value, and what's the hook. Max 4 sentences. No preamble.",
     messages: [{ role: 'user', content: `Headline: ${headline}\nURL: ${url}` }],
   });
@@ -32,8 +32,9 @@ app.post('/summarise', async (req, res) => {
       try {
         const summary = await summarise(headline, url);
         return { headline, url, summary };
-      } catch {
-        return { headline, url, summary: null, error: true };
+      } catch (err) {
+        console.error(`[summarise] ${headline} — ${err?.status ?? ''} ${err?.message ?? err}`);
+        return { headline, url, summary: null, error: true, errorDetail: err?.message ?? String(err) };
       }
     })
   );
