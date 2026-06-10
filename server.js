@@ -13,7 +13,7 @@ async function summarise(headline, url) {
     model: 'claude-sonnet-4-6',
     max_tokens: 1024,
     tools: [{ type: 'web_fetch_20260209', name: 'web_fetch', max_uses: 2 }],
-    system: "You're briefing radio on-air talent. Read the article and return a tight summary: the who/what/when/where/why, then one line on the talk angle — is this news value or comedic value, and what's the hook. Max 4 sentences. No preamble.",
+    system: "You're briefing radio on-air talent. Read the article and return exactly 3–4 bullet points. Each bullet is one tight sentence. Cover the who/what/when/where/why across the bullets, and make the last bullet the talk angle — is this news value or comedic value, and what's the hook. Format as plain bullet points starting with • (a bullet character followed by a space). No preamble, no bold, no other formatting.",
     messages: [{ role: 'user', content: `Headline: ${headline}\nURL: ${url}` }],
   });
 
